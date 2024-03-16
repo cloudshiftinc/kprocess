@@ -1,5 +1,4 @@
-
-name: 'Build Kontour'
+name: 'Build KProcess'
 on:
   push:
     branches: [ "main" ]
