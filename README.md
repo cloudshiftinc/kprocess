@@ -1,6 +1,7 @@
 
-![Maven Central](https://img.shields.io/maven-central/v/io.cloudshiftdev.kprocess/kprocess)
-![GitHub](https://img.shields.io/github/license/cloudshiftinc/kprocess)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/cloudshiftinc/kprocess/build.yaml?branch=main&style=plastic&label=Build%20-%20Main&cacheSeconds=300)
+![Maven Central Version](https://img.shields.io/maven-central/v/io.cloudshiftdev.kprocess/kprocess?style=plastic&label=latest%20release&cacheSeconds=300)
+![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.cloudshiftdev.kprocess/kprocess?server=https%3A%2F%2Fs01.oss.sonatype.org&style=plastic&label=latest%20snapshot&cacheSeconds=300)
 
 # KProcess
 
