@@ -57,8 +57,6 @@ public final class io/cloudshiftdev/kprocess/KProcessKt {
 	public static final fun exec (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun execToFile (Ljava/io/File;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun execToList (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun main (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun main ([Ljava/lang/String;)V
 }
 
 public abstract class io/cloudshiftdev/kprocess/OutputConsumer {

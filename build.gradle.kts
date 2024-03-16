@@ -1,4 +1,6 @@
 import com.gradle.scan.agent.serialization.scan.serializer.kryo.ja
+import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
+import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -111,4 +113,26 @@ testing {
             }
         }
     }
+}
+
+
+val ciBuild = System.getenv("CI") != null
+
+val precommit = tasks.register("precommit") {
+    group = "verification"
+    dependsOn("check", "ktfmtFormat", "apiDump")
+}
+
+// only check formatting for CI builds
+tasks.withType<KtfmtCheckTask>().configureEach {
+    enabled = ciBuild
+}
+
+// always format for non-CI builds
+tasks.withType<KtfmtFormatTask>().configureEach {
+    enabled = !ciBuild
+}
+
+tasks.named("apiCheck") {
+    mustRunAfter("apiDump")
 }
