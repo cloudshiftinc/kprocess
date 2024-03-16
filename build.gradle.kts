@@ -20,7 +20,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
  */
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktfmt)
     alias(libs.plugins.jetbrains.binaryCompatibilityValidator)
     alias(libs.plugins.vanniktech.maven.publish)
