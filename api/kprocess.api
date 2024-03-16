@@ -1,0 +1,75 @@
+public final class io/cloudshiftdev/kprocess/ExecResult {
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Ljava/util/List;
+	public final fun getExitCode ()I
+	public final fun getOutput ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/cloudshiftdev/kprocess/ExecSpec {
+	public abstract fun commandLine (Ljava/lang/Iterable;)V
+	public abstract fun commandLine ([Ljava/lang/String;)V
+	public abstract fun consumeLineSequence (Lkotlin/jvm/functions/Function2;)V
+	public abstract fun consumeStream (Lkotlin/jvm/functions/Function2;)V
+	public abstract fun destroyForcibly (Z)V
+	public abstract fun discardError ()V
+	public abstract fun discardOutput ()V
+	public abstract fun environment (Ljava/util/Map;)V
+	public abstract fun environmentVariable (Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun errorConsumer (Lio/cloudshiftdev/kprocess/OutputConsumer;)V
+	public abstract fun failOnNonZeroExit (Z)V
+	public abstract fun inheritEnvironment (Z)V
+	public abstract fun inheritError ()V
+	public abstract fun inheritOutput ()V
+	public abstract fun inputProvider (Lio/cloudshiftdev/kprocess/InputProvider;)V
+	public abstract fun outputConsumer (Lio/cloudshiftdev/kprocess/OutputConsumer;)V
+	public abstract fun redirectErrorStream (Z)V
+	public abstract fun workingDir (Ljava/io/File;)V
+}
+
+public final class io/cloudshiftdev/kprocess/ExecSpec$DefaultImpls {
+	public static fun commandLine (Lio/cloudshiftdev/kprocess/ExecSpec;[Ljava/lang/String;)V
+	public static fun consumeLineSequence (Lio/cloudshiftdev/kprocess/ExecSpec;Lkotlin/jvm/functions/Function2;)V
+	public static fun consumeStream (Lio/cloudshiftdev/kprocess/ExecSpec;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun destroyForcibly$default (Lio/cloudshiftdev/kprocess/ExecSpec;ZILjava/lang/Object;)V
+	public static fun discardError (Lio/cloudshiftdev/kprocess/ExecSpec;)V
+	public static fun discardOutput (Lio/cloudshiftdev/kprocess/ExecSpec;)V
+	public static synthetic fun failOnNonZeroExit$default (Lio/cloudshiftdev/kprocess/ExecSpec;ZILjava/lang/Object;)V
+	public static synthetic fun inheritEnvironment$default (Lio/cloudshiftdev/kprocess/ExecSpec;ZILjava/lang/Object;)V
+	public static fun inheritError (Lio/cloudshiftdev/kprocess/ExecSpec;)V
+	public static fun inheritOutput (Lio/cloudshiftdev/kprocess/ExecSpec;)V
+	public static synthetic fun redirectErrorStream$default (Lio/cloudshiftdev/kprocess/ExecSpec;ZILjava/lang/Object;)V
+}
+
+public abstract class io/cloudshiftdev/kprocess/InputProvider {
+	public static final field Companion Lio/cloudshiftdev/kprocess/InputProvider$Companion;
+}
+
+public final class io/cloudshiftdev/kprocess/InputProvider$Companion {
+	public final fun file (Ljava/io/File;)Lio/cloudshiftdev/kprocess/InputProvider;
+	public final fun inherit ()Lio/cloudshiftdev/kprocess/InputProvider;
+	public final fun none ()Lio/cloudshiftdev/kprocess/InputProvider;
+	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/InputProvider;
+}
+
+public final class io/cloudshiftdev/kprocess/KProcessKt {
+	public static final fun exec (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun execToFile (Ljava/io/File;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun execToList (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun main (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun main ([Ljava/lang/String;)V
+}
+
+public abstract class io/cloudshiftdev/kprocess/OutputConsumer {
+	public static final field Companion Lio/cloudshiftdev/kprocess/OutputConsumer$Companion;
+}
+
+public final class io/cloudshiftdev/kprocess/OutputConsumer$Companion {
+	public final fun discard ()Lio/cloudshiftdev/kprocess/OutputConsumer;
+	public final fun file (Ljava/io/File;)Lio/cloudshiftdev/kprocess/OutputConsumer;
+	public final fun inherit ()Lio/cloudshiftdev/kprocess/OutputConsumer;
+	public final fun lines (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/OutputConsumer;
+	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/OutputConsumer;
+}
+
