@@ -24,7 +24,7 @@ class KProcessTest : FunSpec() {
         test("exec using sequence works") {
             val result = exec {
                 commandLine("git", "version")
-                consumeLineSequence { it.toList()}
+                consumeLineSequence { it.toList() }
             }
 
             result.output.shouldHaveSize(1)
@@ -35,7 +35,7 @@ class KProcessTest : FunSpec() {
         test("exec to stream works") {
             val result = exec {
                 commandLine("git", "version")
-                consumeStream {inputStream ->
+                consumeStream { inputStream ->
                     val file = tempfile()
                     file.outputStream().use { inputStream.copyTo(it) }
                     file
@@ -44,13 +44,10 @@ class KProcessTest : FunSpec() {
 
             result.output.shouldBeInstanceOf<File>()
             result.output.readText().shouldStartWith("git version ")
-
         }
 
         test("bad command throws exception") {
-            val e = shouldThrow<IOException> {
-                execToList { commandLine("xxxgit", "version") }
-            }
+            val e = shouldThrow<IOException> { execToList { commandLine("xxxgit", "version") } }
 
             e.message.shouldBe("Cannot run program \"xxxgit\": error=2, No such file or directory")
         }

@@ -24,7 +24,8 @@ public suspend fun execToFile(file: File, spec: (ExecSpec<Unit>.() -> Unit)): Ex
         outputConsumer(OutputConsumer.file(file))
     }
 
-public class ExecResult<O> internal constructor(
+public class ExecResult<O>
+internal constructor(
     private val executableName: String,
     public val exitCode: Int,
     public val output: O,
@@ -109,7 +110,6 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
                     when (consumer) {
                         is OutputConsumer.Stream<*> ->
                             process.errorStream.use { consumer.handler(it) }
-
                         else -> emptyList<String>()
                     }
                 } ?: emptyList<String>()
