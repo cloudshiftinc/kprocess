@@ -6,7 +6,7 @@ kotlin = "1.9.23"
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.14.0" }
-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.27.0" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.28.0" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.17.0" }
 
 [libraries]
