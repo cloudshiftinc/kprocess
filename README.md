@@ -46,7 +46,10 @@ Co-routine, DSL-friendly process launching from Kotlin.
 
 ## Getting Started
 
-Gradle:
+Gradle: 
+
+![Maven Central Version](https://img.shields.io/maven-central/v/io.cloudshiftdev.kprocess/kprocess?style=plastic&label=latest%20release&cacheSeconds=300)
+![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.cloudshiftdev.kprocess/kprocess?server=https%3A%2F%2Fs01.oss.sonatype.org&style=plastic&label=latest%20snapshot&cacheSeconds=300)
 ```kotlin
 
 dependencies {
