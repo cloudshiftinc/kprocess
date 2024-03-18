@@ -53,6 +53,11 @@ public final class io/cloudshiftdev/kprocess/InputProvider$Companion {
 	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/InputProvider;
 }
 
+public abstract class io/cloudshiftdev/kprocess/KProcessException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class io/cloudshiftdev/kprocess/KProcessKt {
 	public static final fun exec (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun execToFile (Ljava/io/File;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -71,9 +76,13 @@ public final class io/cloudshiftdev/kprocess/OutputConsumer$Companion {
 	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/OutputConsumer;
 }
 
-public final class io/cloudshiftdev/kprocess/ProcessFailedException : java/lang/RuntimeException {
+public final class io/cloudshiftdev/kprocess/ProcessFailedException : io/cloudshiftdev/kprocess/KProcessException {
 	public fun <init> (ILjava/util/List;)V
 	public final fun getErrorOutput ()Ljava/util/List;
 	public final fun getExitCode ()I
+}
+
+public final class io/cloudshiftdev/kprocess/ProcessStartException : io/cloudshiftdev/kprocess/KProcessException {
+	public fun <init> (Ljava/lang/String;)V
 }
 

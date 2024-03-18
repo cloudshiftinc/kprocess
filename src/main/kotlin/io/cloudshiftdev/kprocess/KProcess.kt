@@ -1,6 +1,7 @@
 package io.cloudshiftdev.kprocess
 
 import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -59,33 +60,45 @@ internal constructor(
     }
 }
 
+private fun requireProcessStart(predicate: Boolean, lazyMessage: () -> String) {
+    if (!predicate) throw ProcessStartException(lazyMessage())
+}
+
 private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
-    require(spec.commandLine.isNotEmpty()) { "Command line must not be empty" }
-    spec.workingDir?.also {
-        require(it.exists() && it.isDirectory) {
-            "Working directory '${spec.workingDir}' must exist and be a directory"
-        }
+    requireProcessStart(spec.commandLine.isNotEmpty()) { "Empty command line" }
+    requireProcessStart(spec.workingDir?.exists() ?: true) {
+        "Working directory '${spec.workingDir}' must exist"
+    }
+    requireProcessStart(spec.workingDir?.isDirectory ?: true) {
+        "Working directory '${spec.workingDir}' must be a directory"
     }
 
     return withContext(Dispatchers.IO) {
         val process =
-            ProcessBuilder(spec.commandLine)
-                .apply {
-                    redirectInput(spec.inputProvider.toRedirect())
-                    redirectOutput(spec.outputConsumer.toRedirect())
-                    when {
-                        spec.redirectErrorStream -> redirectErrorStream(true)
-                        else -> redirectError(spec.errorConsumer.toRedirect())
-                    }
+            try {
+                ProcessBuilder(spec.commandLine)
+                    .apply {
+                        redirectInput(spec.inputProvider.toRedirect())
+                        redirectOutput(spec.outputConsumer.toRedirect())
+                        when {
+                            spec.redirectErrorStream -> redirectErrorStream(true)
+                            else -> redirectError(spec.errorConsumer.toRedirect())
+                        }
 
-                    environment().apply {
-                        if (!spec.inheritEnvironment) clear()
-                        putAll(spec.env)
-                    }
+                        environment().apply {
+                            if (!spec.inheritEnvironment) clear()
+                            putAll(spec.env)
+                        }
 
-                    spec.workingDir?.let { directory(it) }
+                        spec.workingDir?.let { directory(it) }
+                    }
+                    .start()
+            } catch (e: Exception) {
+                requireProcessStart(e is IOException || e is UnsupportedOperationException) {
+                    "Failed to start process: ${e.message}"
                 }
-                .start()
+                throw e
+            }
 
         val inputJob = launch {
             when (val inputProvider = spec.inputProvider) {
@@ -145,7 +158,12 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
     }
 }
 
+public abstract class KProcessException(message: String, cause: Throwable? = null) :
+    RuntimeException(message, cause)
+
 public class ProcessFailedException(
     public val exitCode: Int,
     public val errorOutput: List<String>
-) : RuntimeException("Process failed with exit code $exitCode; stderr=$errorOutput")
+) : KProcessException("Process failed with exit code $exitCode; stderr=$errorOutput")
+
+public class ProcessStartException(message: String) : KProcessException(message)
