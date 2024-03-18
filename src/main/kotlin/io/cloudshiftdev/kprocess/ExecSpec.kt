@@ -61,7 +61,7 @@ internal class ExecSpecImpl<O> : ExecSpec<O> {
     var workingDir: File? = null
     var inputProvider: InputProvider = InputProvider.none()
     var outputConsumer: OutputConsumer? = null
-    var errorConsumer: OutputConsumer? = null
+    var errorConsumer: OutputConsumer? = OutputConsumer.lines { it.toList() }
     var inheritEnvironment: Boolean = true
     var redirectErrorStream: Boolean = false
     var destroyForcibly: Boolean = false

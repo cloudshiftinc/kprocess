@@ -51,5 +51,14 @@ class KProcessTest : FunSpec() {
 
             e.message.shouldBe("Cannot run program \"xxxgit\": error=2, No such file or directory")
         }
+
+        test("error output captured") {
+            val e =
+                shouldThrow<ProcessFailedException> { execToList { commandLine("git", "--xxx") } }
+
+            e.message.shouldStartWith(
+                "Process failed with exit code 129; stderr=[unknown option: --xxx,"
+            )
+        }
     }
 }

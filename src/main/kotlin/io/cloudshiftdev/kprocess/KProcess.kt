@@ -127,9 +127,7 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
             // then wait for process to exit
             val exitCode = runInterruptible { process.waitFor() }
             if (spec.failOnNonZeroExit && exitCode != 0) {
-                throw RuntimeException(
-                    "Process '${spec.commandLine[0]}' failed with exit code $exitCode; stderr=${results[1]}"
-                )
+                throw ProcessFailedException(exitCode, results[1] as List<String>)
             }
             ExecResult(
                 executableName = spec.commandLine[0],
@@ -146,3 +144,8 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
         }
     }
 }
+
+public class ProcessFailedException(
+    public val exitCode: Int,
+    public val errorOutput: List<String>
+) : RuntimeException("Process failed with exit code $exitCode; stderr=$errorOutput")
