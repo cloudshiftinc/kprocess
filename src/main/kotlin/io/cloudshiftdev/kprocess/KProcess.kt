@@ -60,6 +60,20 @@ internal constructor(
     }
 }
 
+public class ProcessSpec(
+    public val commandLine: List<String>,
+    public val workingDir: File?,
+    public val env: Map<String, String>,
+    public val inheritEnvironment: Boolean,
+    public val redirectErrorStream: Boolean,
+    public val destroyForcibly: Boolean,
+    public val failOnNonZeroExit: Boolean
+) {
+    override fun toString(): String {
+        return "ProcessSpec(workingDir=$workingDir, commandLine=$commandLine, env=$env, inheritEnvironment=$inheritEnvironment, redirectErrorStream=$redirectErrorStream, destroyForcibly=$destroyForcibly, failOnNonZeroExit=$failOnNonZeroExit)"
+    }
+}
+
 private fun requireProcessStart(predicate: Boolean, lazyMessage: () -> String) {
     if (!predicate) throw ProcessStartException(lazyMessage())
 }
@@ -76,18 +90,32 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
     return withContext(Dispatchers.IO) {
         val process =
             try {
-                ProcessBuilder(spec.commandLine)
+                val builder = ProcessBuilder(spec.commandLine)
+                val environment =
+                    builder.environment().apply {
+                        if (!spec.inheritEnvironment) clear()
+                        putAll(spec.env)
+                    }
+                val processSpec =
+                    ProcessSpec(
+                        commandLine = spec.commandLine,
+                        workingDir = spec.workingDir,
+                        env = environment.toMap(),
+                        inheritEnvironment = spec.inheritEnvironment,
+                        redirectErrorStream = spec.redirectErrorStream,
+                        destroyForcibly = spec.destroyForcibly,
+                        failOnNonZeroExit = spec.failOnNonZeroExit
+                    )
+
+                spec.launchHandlers.forEach { it(processSpec) }
+
+                builder
                     .apply {
                         redirectInput(spec.inputProvider.toRedirect())
                         redirectOutput(spec.outputConsumer.toRedirect())
                         when {
                             spec.redirectErrorStream -> redirectErrorStream(true)
                             else -> redirectError(spec.errorConsumer.toRedirect())
-                        }
-
-                        environment().apply {
-                            if (!spec.inheritEnvironment) clear()
-                            putAll(spec.env)
                         }
 
                         spec.workingDir?.let { directory(it) }

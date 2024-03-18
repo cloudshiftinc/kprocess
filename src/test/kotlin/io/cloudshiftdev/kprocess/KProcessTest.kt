@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -59,6 +60,16 @@ class KProcessTest : FunSpec() {
             e.message.shouldStartWith(
                 "Process failed with exit code 129; stderr=[unknown option: --xxx,"
             )
+        }
+
+        test("launch handler works") {
+            var processSpec: ProcessSpec? = null
+            execToList {
+                commandLine("git", "version")
+                launchHandler { processSpec = it }
+            }
+
+            processSpec.shouldNotBeNull()
         }
     }
 }

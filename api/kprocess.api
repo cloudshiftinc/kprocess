@@ -23,6 +23,7 @@ public abstract interface class io/cloudshiftdev/kprocess/ExecSpec {
 	public abstract fun inheritError ()V
 	public abstract fun inheritOutput ()V
 	public abstract fun inputProvider (Lio/cloudshiftdev/kprocess/InputProvider;)V
+	public abstract fun launchHandler (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun outputConsumer (Lio/cloudshiftdev/kprocess/OutputConsumer;)V
 	public abstract fun redirectErrorStream (Z)V
 	public abstract fun workingDir (Ljava/io/File;)V
@@ -40,6 +41,10 @@ public final class io/cloudshiftdev/kprocess/ExecSpec$DefaultImpls {
 	public static fun inheritError (Lio/cloudshiftdev/kprocess/ExecSpec;)V
 	public static fun inheritOutput (Lio/cloudshiftdev/kprocess/ExecSpec;)V
 	public static synthetic fun redirectErrorStream$default (Lio/cloudshiftdev/kprocess/ExecSpec;ZILjava/lang/Object;)V
+}
+
+public final class io/cloudshiftdev/kprocess/ExecSpecKt {
+	public static final fun printLaunch (Lio/cloudshiftdev/kprocess/ExecSpec;)V
 }
 
 public abstract class io/cloudshiftdev/kprocess/InputProvider {
@@ -80,6 +85,18 @@ public final class io/cloudshiftdev/kprocess/ProcessFailedException : io/cloudsh
 	public fun <init> (ILjava/util/List;)V
 	public final fun getErrorOutput ()Ljava/util/List;
 	public final fun getExitCode ()I
+}
+
+public final class io/cloudshiftdev/kprocess/ProcessSpec {
+	public fun <init> (Ljava/util/List;Ljava/io/File;Ljava/util/Map;ZZZZ)V
+	public final fun getCommandLine ()Ljava/util/List;
+	public final fun getDestroyForcibly ()Z
+	public final fun getEnv ()Ljava/util/Map;
+	public final fun getFailOnNonZeroExit ()Z
+	public final fun getInheritEnvironment ()Z
+	public final fun getRedirectErrorStream ()Z
+	public final fun getWorkingDir ()Ljava/io/File;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/cloudshiftdev/kprocess/ProcessStartException : io/cloudshiftdev/kprocess/KProcessException {

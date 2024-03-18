@@ -30,12 +30,12 @@ public interface ExecSpec<O> {
         outputConsumer(OutputConsumer.discard())
     }
 
-    public fun discardError() {
-        errorConsumer(OutputConsumer.discard())
-    }
-
     public fun inheritOutput() {
         outputConsumer(OutputConsumer.discard())
+    }
+
+    public fun discardError() {
+        errorConsumer(OutputConsumer.discard())
     }
 
     public fun inheritError() {
@@ -53,6 +53,12 @@ public interface ExecSpec<O> {
     public fun destroyForcibly(value: Boolean = true)
 
     public fun failOnNonZeroExit(value: Boolean = true)
+
+    public fun launchHandler(handler: (ProcessSpec) -> Unit)
+}
+
+public fun ExecSpec<*>.printLaunch() {
+    launchHandler { println(it) }
 }
 
 internal class ExecSpecImpl<O> : ExecSpec<O> {
@@ -66,6 +72,7 @@ internal class ExecSpecImpl<O> : ExecSpec<O> {
     var redirectErrorStream: Boolean = false
     var destroyForcibly: Boolean = false
     var failOnNonZeroExit: Boolean = true
+    val launchHandlers = mutableListOf<(ProcessSpec) -> Unit>()
 
     override fun commandLine(args: Iterable<String>) {
         commandLine.addAll(args)
@@ -89,7 +96,11 @@ internal class ExecSpecImpl<O> : ExecSpec<O> {
     }
 
     override fun errorConsumer(consumer: OutputConsumer) {
-        require(errorConsumer == null) { "Error consumer already set" }
+        require(
+            errorConsumer is OutputConsumer.Discard || errorConsumer is OutputConsumer.Inherit
+        ) {
+            "Error consumer can only be set to discard or inherit"
+        }
         errorConsumer = consumer
     }
 
@@ -111,5 +122,9 @@ internal class ExecSpecImpl<O> : ExecSpec<O> {
 
     override fun failOnNonZeroExit(value: Boolean) {
         failOnNonZeroExit = value
+    }
+
+    override fun launchHandler(handler: (ProcessSpec) -> Unit) {
+        launchHandlers.add(handler)
     }
 }
