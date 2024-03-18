@@ -71,3 +71,9 @@ public final class io/cloudshiftdev/kprocess/OutputConsumer$Companion {
 	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/OutputConsumer;
 }
 
+public final class io/cloudshiftdev/kprocess/ProcessFailedException : java/lang/RuntimeException {
+	public fun <init> (ILjava/util/List;)V
+	public final fun getErrorOutput ()Ljava/util/List;
+	public final fun getExitCode ()I
+}
+
