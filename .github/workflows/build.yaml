@@ -36,7 +36,7 @@ jobs:
 
     # https://github.com/gradle/wrapper-validation-action
     - name: 'Validate Gradle Wrapper'
-      uses: 'gradle/wrapper-validation-action@699bb18358f12c5b78b37bb0111d3a0e2276e0e2' # v2.1.1
+      uses: 'gradle/wrapper-validation-action@b231772637bb498f11fdbc86052b6e8a8dc9fc92' # v2.1.2
 
     # https://github.com/gradle/actions/tree/main/setup-gradle
     - name: 'Set up Gradle'
