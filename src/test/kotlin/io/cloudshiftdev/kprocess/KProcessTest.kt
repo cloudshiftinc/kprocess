@@ -68,7 +68,8 @@ class KProcessTest : FunSpec() {
                 commandLine("git", "version")
                 launchHandler {
                     processSpec = it
-                    println(it) }
+                    println(it)
+                }
             }
 
             processSpec.shouldNotBeNull()
