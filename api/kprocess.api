@@ -56,6 +56,7 @@ public final class io/cloudshiftdev/kprocess/InputProvider$Companion {
 	public final fun inherit ()Lio/cloudshiftdev/kprocess/InputProvider;
 	public final fun none ()Lio/cloudshiftdev/kprocess/InputProvider;
 	public final fun stream (Lkotlin/jvm/functions/Function2;)Lio/cloudshiftdev/kprocess/InputProvider;
+	public final fun string (Ljava/lang/String;)Lio/cloudshiftdev/kprocess/InputProvider;
 }
 
 public abstract class io/cloudshiftdev/kprocess/KProcessException : java/lang/RuntimeException {

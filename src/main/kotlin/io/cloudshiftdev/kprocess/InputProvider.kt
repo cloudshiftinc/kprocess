@@ -18,6 +18,8 @@ public sealed class InputProvider {
 
         public fun stream(handler: suspend (OutputStream) -> Unit): InputProvider = Stream(handler)
 
+        public fun string(value: String): InputProvider = Stream { it.write(value.toByteArray()) }
+
         public fun file(file: File): InputProvider = Stream { file.inputStream().copyTo(it) }
     }
 }

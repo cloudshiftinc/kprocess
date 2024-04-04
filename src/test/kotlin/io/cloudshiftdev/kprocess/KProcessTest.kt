@@ -66,7 +66,9 @@ class KProcessTest : FunSpec() {
             var processSpec: ProcessSpec? = null
             execToList {
                 commandLine("git", "version")
-                launchHandler { processSpec = it }
+                launchHandler {
+                    processSpec = it
+                    println(it) }
             }
 
             processSpec.shouldNotBeNull()
