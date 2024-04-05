@@ -65,9 +65,9 @@ public abstract class io/cloudshiftdev/kprocess/KProcessException : java/lang/Ru
 }
 
 public final class io/cloudshiftdev/kprocess/KProcessKt {
-	public static final fun exec (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun execToFile (Ljava/io/File;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun execToList (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun exec ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun execToFile (Ljava/io/File;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun execToList ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract class io/cloudshiftdev/kprocess/OutputConsumer {
@@ -102,5 +102,35 @@ public final class io/cloudshiftdev/kprocess/ProcessSpec {
 
 public final class io/cloudshiftdev/kprocess/ProcessStartException : io/cloudshiftdev/kprocess/KProcessException {
 	public fun <init> (Ljava/lang/String;)V
+}
+
+public abstract interface class io/cloudshiftdev/kprocess/session/ShellSession {
+	public abstract fun cd (Ljava/io/File;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cd (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun changeDirectory (Ljava/io/File;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun chmod ([Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun currentDirectory (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cwd (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun exec ([Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun mkdir ([Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun pwd (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/cloudshiftdev/kprocess/session/ShellSession$DefaultImpls {
+	public static fun cd (Lio/cloudshiftdev/kprocess/session/ShellSession;Ljava/io/File;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun cd (Lio/cloudshiftdev/kprocess/session/ShellSession;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static fun cwd (Lio/cloudshiftdev/kprocess/session/ShellSession;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun exec$default (Lio/cloudshiftdev/kprocess/session/ShellSession;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun pwd (Lio/cloudshiftdev/kprocess/session/ShellSession;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/cloudshiftdev/kprocess/session/ShellSessionKt {
+	public static final fun shellSession (Ljava/io/File;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun shellSession$default (Ljava/io/File;Ljava/util/Map;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class io/cloudshiftdev/kprocess/session/ZipKt {
+	public static final fun unzip (Lio/cloudshiftdev/kprocess/session/ShellSession;[Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun zip (Lio/cloudshiftdev/kprocess/session/ShellSession;[Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

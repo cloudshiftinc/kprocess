@@ -39,6 +39,17 @@ Co-routine, DSL-friendly process launching from Kotlin.
     }
 ```
 
+## Shell Session
+
+For executing multiple commands in a single shell session, use the `shellSession` function:
+```kotlin
+shellSession {
+  mkdir("foo")
+  cd("foo")
+  exec("git", "init")
+}
+```
+
 ## Key Features
 
 * Non-zero exit values are considered a failure by default (configure `failOnNonZeroExit`) and throw an exception;

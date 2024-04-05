@@ -10,17 +10,32 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 
-public suspend fun <O> exec(spec: (ExecSpec<O>.() -> Unit)): ExecResult<O> =
-    execute(ExecSpecImpl<O>().apply(spec))
+public suspend fun <O> exec(
+    vararg commandAndArgs: String,
+    spec: (ExecSpec<O>.() -> Unit)
+): ExecResult<O> =
+    ExecSpecImpl<O>()
+        .apply {
+            commandLine(commandAndArgs.toList())
+            spec()
+        }
+        .let { execute(it) }
 
-public suspend fun execToList(spec: (ExecSpec<List<String>>.() -> Unit)): ExecResult<List<String>> =
-    exec {
+public suspend fun execToList(
+    vararg commandAndArgs: String,
+    spec: (ExecSpec<List<String>>.() -> Unit)
+): ExecResult<List<String>> =
+    exec(*commandAndArgs) {
         apply(spec)
         outputConsumer(OutputConsumer.lines { it.toList() })
     }
 
-public suspend fun execToFile(file: File, spec: (ExecSpec<Unit>.() -> Unit)): ExecResult<Unit> =
-    exec {
+public suspend fun execToFile(
+    file: File,
+    vararg commandAndArgs: String,
+    spec: (ExecSpec<Unit>.() -> Unit)
+): ExecResult<Unit> =
+    exec(*commandAndArgs) {
         apply(spec)
         outputConsumer(OutputConsumer.file(file))
     }
