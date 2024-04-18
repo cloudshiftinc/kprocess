@@ -27,12 +27,12 @@ public interface ShellSession {
     ): ExecResult<O>
 }
 
-public suspend fun shellSession(
+public suspend fun <T> shellSession(
     workingDir: File? = null,
     environment: Map<String, String> = emptyMap(),
-    session: suspend ShellSession.() -> Unit
-) {
-    ShellSessionImpl(workingDir, environment).session()
+    session: suspend ShellSession.() -> T
+): T {
+    return ShellSessionImpl(workingDir, environment).session()
 }
 
 private class ShellSessionImpl(initialWorkingDir: File?, environment: Map<String, String>) :
