@@ -14,6 +14,8 @@ public interface ExecSpec<O> {
 
     public fun environmentVariable(key: String, value: String)
 
+    public fun envVar(key: String, value: String): Unit = environmentVariable(key, value)
+
     public fun workingDir(dir: File)
 
     public fun outputConsumer(consumer: OutputConsumer)
