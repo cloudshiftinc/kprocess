@@ -1,7 +1,7 @@
 # Reference: https://docs.gradle.org/current/userguide/platforms.html
 
 [versions]
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -10,7 +10,7 @@ vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.2
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.17.0" }
 
 [libraries]
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.0" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.1" }
 
 ##### Testing libraries
 
