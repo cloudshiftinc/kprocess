@@ -95,11 +95,13 @@ class KProcessTest : FunSpec() {
 
         test("output exception handled correctly") {
             val e =
-                shouldThrow<ProcessFailedException> {
-                    exec<Unit>("git", "--version") { consumeLineSequence { error("boom") } }
+                shouldThrow<ProcessIOException> {
+                    exec<Unit>("/bin/bash", "-c", "sleep 1") {
+                        consumeLineSequence { error("boom") }
+                    }
                 }
             // 141 is due to output pipe being closed before the process is done
-            e.message.shouldBe("Process failed with exit code 141; stderr=[]")
+            e.message.shouldBe("Process input/output failure")
         }
 
         test("output exception doesn't hide process exception") {
