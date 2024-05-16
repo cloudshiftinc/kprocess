@@ -90,6 +90,10 @@ public final class io/cloudshiftdev/kprocess/ProcessFailedException : io/cloudsh
 	public final fun getExitCode ()I
 }
 
+public final class io/cloudshiftdev/kprocess/ProcessIOException : io/cloudshiftdev/kprocess/KProcessException {
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
 public final class io/cloudshiftdev/kprocess/ProcessSpec {
 	public fun <init> (Ljava/util/List;Ljava/io/File;Ljava/util/Map;ZZZZ)V
 	public final fun getCommandLine ()Ljava/util/List;

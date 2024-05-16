@@ -62,6 +62,14 @@ class KProcessTest : FunSpec() {
             )
         }
 
+        test("error output captured 2") {
+            val result =
+                exec<Unit>("/bin/bash", "-c", "echo foo 1>&2") {
+                    errorConsumer(OutputConsumer.lines { it.toList() })
+                }
+            result.error.shouldHaveSize(1).first().shouldBe("foo")
+        }
+
         test("launch handler works") {
             var processSpec: ProcessSpec? = null
             execToList {
@@ -73,6 +81,43 @@ class KProcessTest : FunSpec() {
             }
 
             processSpec.shouldNotBeNull()
+        }
+
+        test("input exception handled correctly") {
+            val e =
+                shouldThrow<ProcessIOException> {
+                    exec<Unit>("git", "--version") {
+                        inputProvider(InputProvider.stream { error("boom") })
+                    }
+                }
+            e.message.shouldBe("Process input/output failure")
+        }
+
+        test("output exception handled correctly") {
+            val e =
+                shouldThrow<ProcessFailedException> {
+                    exec<Unit>("git", "--version") { consumeLineSequence { error("boom") } }
+                }
+            // 141 is due to output pipe being closed before the process is done
+            e.message.shouldBe("Process failed with exit code 141; stderr=[]")
+        }
+
+        test("output exception doesn't hide process exception") {
+            val e =
+                shouldThrow<IOException> {
+                    exec<Unit>("gitxxx", "--version") { consumeLineSequence { error("boom") } }
+                }
+            e.message.shouldBe("Cannot run program \"gitxxx\": error=2, No such file or directory")
+        }
+
+        test("output exception doesn't hide process exception 2") {
+            val e =
+                shouldThrow<ProcessFailedException> {
+                    exec<Unit>("/bin/bash", "-c", "sleep 3; exit 111") {
+                        consumeLineSequence { it.last() }
+                    }
+                }
+            e.message.shouldBe("Process failed with exit code 111; stderr=[]")
         }
     }
 }

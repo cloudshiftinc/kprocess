@@ -98,11 +98,12 @@ internal class ExecSpecImpl<O> : ExecSpec<O> {
     }
 
     override fun errorConsumer(consumer: OutputConsumer) {
-        require(
-            errorConsumer is OutputConsumer.Discard || errorConsumer is OutputConsumer.Inherit
-        ) {
-            "Error consumer can only be set to discard or inherit"
-        }
+        //        require(
+        //            errorConsumer is OutputConsumer.Discard || errorConsumer is
+        // OutputConsumer.Inherit
+        //        ) {
+        //            "Error consumer can only be set to discard or inherit"
+        //        }
         errorConsumer = consumer
     }
 

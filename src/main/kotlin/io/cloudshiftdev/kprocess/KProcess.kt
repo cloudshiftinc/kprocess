@@ -2,11 +2,9 @@ package io.cloudshiftdev.kprocess
 
 import java.io.File
 import java.io.IOException
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 
@@ -143,55 +141,80 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
                 throw e
             }
 
-        val inputJob = launch {
-            when (val inputProvider = spec.inputProvider) {
-                is InputProvider.Stream -> process.outputStream.use { inputProvider.handler(it) }
-                else -> {}
+        val deferredStandardInput: Deferred<ProcessIOResult> = async {
+            try {
+                when (val inputProvider = spec.inputProvider) {
+                    is InputProvider.Stream ->
+                        process.outputStream.use { inputProvider.handler(it) }
+                    else -> {}
+                }
+                ProcessIOResult.NoResult
+            } catch (e: Exception) {
+                ProcessIOResult.Failure(e)
             }
         }
 
-        val deferredStandardOutput = async {
-            spec.outputConsumer?.let { consumer ->
-                when (consumer) {
-                    is OutputConsumer.Stream<*> -> process.inputStream.use { consumer.handler(it) }
-                    else -> Unit
+        val deferredStandardOutput: Deferred<ProcessIOResult> = async {
+            try {
+                when (val consumer = spec.outputConsumer) {
+                    is OutputConsumer.Stream<*> ->
+                        ProcessIOResult.Success(process.inputStream.use { consumer.handler(it) })
+                    else -> ProcessIOResult.NoResult
                 }
-            } ?: Unit
+            } catch (e: Exception) {
+                ProcessIOResult.Failure(e)
+            }
         }
 
-        val deferredErrorOutput = async {
-            spec.errorConsumer
-                ?.takeUnless { spec.redirectErrorStream }
-                ?.let { consumer ->
-                    when (consumer) {
-                        is OutputConsumer.Stream<*> ->
-                            process.errorStream.use { consumer.handler(it) }
-                        else -> emptyList<String>()
-                    }
-                } ?: emptyList<String>()
+        val deferredStandardError: Deferred<ProcessIOResult> = async {
+            try {
+                val consumer = spec.errorConsumer?.takeUnless { spec.redirectErrorStream }
+                when (consumer) {
+                    is OutputConsumer.Stream<*> ->
+                        ProcessIOResult.Success(process.errorStream.use { consumer.handler(it) })
+                    else -> ProcessIOResult.NoResult
+                }
+            } catch (e: Exception) {
+                ProcessIOResult.Failure(e)
+            }
         }
 
         try {
-            // wait for background tasks
+            val inputResult = deferredStandardInput.await()
+            val outputResult = deferredStandardOutput.await()
+            val errorResult = deferredStandardError.await()
+            val results = listOf(inputResult, outputResult, errorResult)
+            val failures = results.filterIsInstance<ProcessIOResult.Failure>()
+            val errorOutput =
+                when (errorResult) {
+                    is ProcessIOResult.Success<*> -> errorResult.value as List<String>
+                    else -> emptyList()
+                }
+            val stdout =
+                when (outputResult) {
+                    is ProcessIOResult.Success<*> -> outputResult.value
+                    else -> null
+                }
 
-            // first wait for input to be finished
-            inputJob.join()
-
-            // then wait for output to be consumed
-            val results = awaitAll(deferredStandardOutput, deferredErrorOutput)
-
-            // then wait for process to exit
+            // wait for process to exit
             val exitCode = runInterruptible { process.waitFor() }
             if (spec.failOnNonZeroExit && exitCode != 0) {
-                throw ProcessFailedException(exitCode, results[1] as List<String>)
+                val ex = ProcessFailedException(exitCode, errorOutput)
+                failures.forEach { ex.addSuppressed(it.thrown) }
+                throw ex
             }
+
+            if (failures.isNotEmpty()) {
+                throw ProcessIOException(failures.first().thrown)
+            }
+
             ExecResult(
                 executableName = spec.commandLine[0],
                 exitCode = exitCode,
-                output = results[0] as O,
-                error = results[1] as List<String>
+                output = stdout as O,
+                error = errorOutput
             )
-        } catch (e: CancellationException) {
+        } catch (e: Exception) {
             when {
                 spec.destroyForcibly -> process.destroyForcibly()
                 else -> process.destroy()
@@ -201,6 +224,14 @@ private suspend fun <O> execute(spec: ExecSpecImpl<O>): ExecResult<O> {
     }
 }
 
+private sealed class ProcessIOResult {
+    data object NoResult : ProcessIOResult()
+
+    data class Success<T>(val value: T) : ProcessIOResult()
+
+    data class Failure(val thrown: Throwable) : ProcessIOResult()
+}
+
 public abstract class KProcessException(message: String, cause: Throwable? = null) :
     RuntimeException(message, cause)
 
@@ -208,5 +239,8 @@ public class ProcessFailedException(
     public val exitCode: Int,
     public val errorOutput: List<String>
 ) : KProcessException("Process failed with exit code $exitCode; stderr=$errorOutput")
+
+public class ProcessIOException(cause: Throwable) :
+    KProcessException("Process input/output failure", cause)
 
 public class ProcessStartException(message: String) : KProcessException(message)
