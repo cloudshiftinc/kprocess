@@ -7,13 +7,13 @@ kotlin = "1.9.24"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.14.0" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.28.0" }
-ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.17.0" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.18.0" }
 
 [libraries]
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.1" }
 
 ##### Testing libraries
 
-kotest-bom = { module = "io.kotest:kotest-bom", version = "5.8.1" }
+kotest-bom = { module = "io.kotest:kotest-bom", version = "5.9.0" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core" }
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5" }
