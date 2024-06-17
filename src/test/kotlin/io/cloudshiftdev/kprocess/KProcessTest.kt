@@ -100,7 +100,6 @@ class KProcessTest : FunSpec() {
                         consumeLineSequence { error("boom") }
                     }
                 }
-            // 141 is due to output pipe being closed before the process is done
             e.message.shouldBe("Process input/output failure")
         }
 
