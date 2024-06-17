@@ -27,7 +27,7 @@ pluginManagement {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-    id("com.gradle.enterprise") version "3.17.5"
+    id("com.gradle.develocity") version "3.17.5"
 }
 
 dependencyResolutionManagement {
@@ -35,13 +35,11 @@ dependencyResolutionManagement {
     repositories { maven("https://cache-redirector.jetbrains.com/repo1.maven.org/maven2") }
 }
 
-gradleEnterprise {
-    if (System.getenv("CI") != null) {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
+develocity {
+    buildScan {
+        publishing.onlyIf { System.getenv("CI") != null }
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
+        termsOfUseAgree = "yes"
     }
 }
 
